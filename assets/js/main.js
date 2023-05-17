@@ -1,212 +1,233 @@
 /*
-	Astral by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+    Astral by HTML5 UP
+    html5up.net | @ajlkn
+    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 */
 
-(function($) {
+(function ($) {
 
-	var $window = $(window),
-		$body = $('body'),
-		$wrapper = $('#wrapper'),
-		$main = $('#main'),
-		$panels = $main.children('.panel'),
-		$nav = $('#nav'), $nav_links = $nav.children('a');
+    var $window = $(window),
+        $body = $('body'),
+        $wrapper = $('#wrapper'),
+        $main = $('#main'),
+        $panels = $main.children('.panel'),
+        $nav = $('#nav'), $nav_links = $nav.children('a');
 
-	// Breakpoints.
-		breakpoints({
-			xlarge:  [ '1281px',  '1680px' ],
-			large:   [ '981px',   '1280px' ],
-			medium:  [ '737px',   '980px'  ],
-			small:   [ '361px',   '736px'  ],
-			xsmall:  [ null,      '360px'  ]
-		});
+    // Breakpoints.
+    breakpoints({
+        xlarge: ['1281px', '1680px'],
+        large: ['981px', '1280px'],
+        medium: ['737px', '980px'],
+        small: ['361px', '736px'],
+        xsmall: [null, '360px']
+    });
 
-	// Play initial animations on page load.
-		$window.on('load', function() {
-			window.setTimeout(function() {
-				$body.removeClass('is-preload');
-			}, 100);
-		});
+    // Play initial animations on page load.
+    $window.on('load', function () {
+        window.setTimeout(function () {
+            $body.removeClass('is-preload');
+        }, 100);
+    });
 
-	// Nav.
-		$nav_links
-			.on('click', function(event) {
+    // Nav.
+    $nav_links
+        .on('click', function (event) {
 
-				var href = $(this).attr('href');
+            var href = $(this).attr('href');
 
-				// Not a panel link? Bail.
-					if (href.charAt(0) != '#'
-					||	$panels.filter(href).length == 0)
-						return;
+            // Not a panel link? Bail.
+            if (href.charAt(0) != '#'
+                || $panels.filter(href).length == 0)
+                return;
 
-				// Prevent default.
-					event.preventDefault();
-					event.stopPropagation();
+            // Prevent default.
+            event.preventDefault();
+            event.stopPropagation();
 
-				// Change panels.
-					if (window.location.hash != href)
-						window.location.hash = href;
+            // Change panels.
+            if (window.location.hash != href) {
+                window.location.hash = href;
+            } else {
+                $window.trigger('click');
+            }
 
-			});
+        });
 
-	// Panels.
+    // Panels.
 
-		// Initialize.
-			(function() {
+    // Initialize.
+    (function () {
 
-				var $panel, $link;
+        var $panel, $link;
 
-				// Get panel, link.
-					if (window.location.hash) {
+        // Get panel, link.
+        if (window.location.hash) {
 
-				 		$panel = $panels.filter(window.location.hash);
-						$link = $nav_links.filter('[href="' + window.location.hash + '"]');
+            $panel = $panels.filter(window.location.hash);
+            $link = $nav_links.filter('[href="' + window.location.hash + '"]');
 
-					}
+        }
 
-				// No panel/link? Default to first.
-					if (!$panel
-					||	$panel.length == 0) {
+        // No panel/link? Default to first.
+        if (!$panel
+            || $panel.length == 0) {
 
-						$panel = $panels.first();
-						$link = $nav_links.first();
+            $panel = $panels.first();
+            $link = $nav_links.first();
 
-					}
+        }
 
-				// Deactivate all panels except this one.
-					$panels.not($panel)
-						.addClass('inactive')
-						.hide();
+        // Deactivate all panels except this one.
+        $panels.not($panel)
+            .addClass('inactive')
+            .hide();
 
-				// Activate link.
-					$link
-						.addClass('active');
+        // Activate link.
+        $link
+            .addClass('active');
 
-				// Reset scroll.
-					$window.scrollTop(0);
+        // Reset scroll.
+        $window.scrollTop(0);
 
-			})();
+    })();
 
-		// Hashchange event.
-			$window.on('hashchange', function(event) {
+    $window.on('click', (event) => {
+        if (window.location.hash) {
+            $panel = $panels.filter(window.location.hash);
+            $link = $nav_links.filter('[href="' + window.location.hash + '"]');
+        } else {
+            $panel = $panels.first();
+            $link = $nav_links.first();
+        }
+        
+        if ($panel.css("display") === "none") {
+            $window.trigger("hashchange");
+        } else {
+            $nav_links.removeClass('active');
+            $panels.addClass('inactive');
+            $panels.hide()
+        }
+    })
 
-				var $panel, $link;
+    // Hashchange event.
+    $window.on('hashchange', function (event) {
 
-				// Get panel, link.
-					if (window.location.hash) {
+        var $panel, $link;
 
-				 		$panel = $panels.filter(window.location.hash);
-						$link = $nav_links.filter('[href="' + window.location.hash + '"]');
+        // Get panel, link.
+        if (window.location.hash) {
 
-						// No target panel? Bail.
-							if ($panel.length == 0)
-								return;
+            $panel = $panels.filter(window.location.hash);
+            $link = $nav_links.filter('[href="' + window.location.hash + '"]');
 
-					}
+            // No target panel? Bail.
+            if ($panel.length == 0)
+                return;
 
-				// No panel/link? Default to first.
-					else {
+        }
 
-						$panel = $panels.first();
-						$link = $nav_links.first();
+        // No panel/link? Default to first.
+        else {
 
-					}
+            $panel = $panels.first();
+            $link = $nav_links.first();
 
-				// Deactivate all panels.
-					$panels.addClass('inactive');
+        }
 
-				// Deactivate all links.
-					$nav_links.removeClass('active');
+        // Deactivate all panels.
+        $panels.addClass('inactive');
 
-				// Activate target link.
-					$link.addClass('active');
+        // Deactivate all links.
+        $nav_links.removeClass('active');
 
-				// Set max/min height.
-					$main
-						.css('max-height', $main.height() + 'px')
-						.css('min-height', $main.height() + 'px');
+        // Activate target link.
+        $link.addClass('active');
 
-				// Delay.
-					setTimeout(function() {
+        // Set max/min height.
+        $main
+            .css('max-height', $main.height() + 'px')
+            .css('min-height', $main.height() + 'px');
 
-						// Hide all panels.
-							$panels.hide();
+        // Delay.
+        setTimeout(function () {
 
-						// Show target panel.
-							$panel.show();
+            // Hide all panels.
+            $panels.hide();
 
-						// Set new max/min height.
-							$main
-								.css('max-height', $panel.outerHeight() + 'px')
-								.css('min-height', $panel.outerHeight() + 'px');
+            // Show target panel.
+            $panel.show();
 
-						// Reset scroll.
-							$window.scrollTop(0);
+            // Set new max/min height.
+            $main
+                .css('max-height', $panel.outerHeight() + 'px')
+                .css('min-height', $panel.outerHeight() + 'px');
 
-						// Delay.
-							window.setTimeout(function() {
+            // Reset scroll.
+            $window.scrollTop(0);
 
-								// Activate target panel.
-									$panel.removeClass('inactive');
+            // Delay.
+            window.setTimeout(function () {
 
-								// Clear max/min height.
-									$main
-										.css('max-height', '')
-										.css('min-height', '');
+                // Activate target panel.
+                $panel.removeClass('inactive');
 
-								// IE: Refresh.
-									$window.triggerHandler('--refresh');
+                // Clear max/min height.
+                $main
+                    .css('max-height', '')
+                    .css('min-height', '');
 
-								// Unlock.
-									locked = false;
+                // IE: Refresh.
+                $window.triggerHandler('--refresh');
 
-							}, (breakpoints.active('small') ? 0 : 500));
+                // Unlock.
+                locked = false;
 
-					}, 250);
+            }, (breakpoints.active('small') ? 0 : 500));
 
-			});
+        }, 250);
 
-	// IE: Fixes.
-		if (browser.name == 'ie') {
+    });
 
-			// Fix min-height/flexbox.
-				$window.on('--refresh', function() {
+    // IE: Fixes.
+    if (browser.name == 'ie') {
 
-					$wrapper.css('height', 'auto');
+        // Fix min-height/flexbox.
+        $window.on('--refresh', function () {
 
-					window.setTimeout(function() {
+            $wrapper.css('height', 'auto');
 
-						var h = $wrapper.height(),
-							wh = $window.height();
+            window.setTimeout(function () {
 
-						if (h < wh)
-							$wrapper.css('height', '100vh');
+                var h = $wrapper.height(),
+                    wh = $window.height();
 
-					}, 0);
+                if (h < wh)
+                    $wrapper.css('height', '100vh');
 
-				});
+            }, 0);
 
-				$window.on('resize load', function() {
-					$window.triggerHandler('--refresh');
-				});
+        });
 
-			// Fix intro pic.
-				$('.panel.intro').each(function() {
+        $window.on('resize load', function () {
+            $window.triggerHandler('--refresh');
+        });
 
-					var $pic = $(this).children('.pic'),
-						$img = $pic.children('img');
+        // Fix intro pic.
+        $('.panel.intro').each(function () {
 
-					$pic
-						.css('background-image', 'url(' + $img.attr('src') + ')')
-						.css('background-size', 'cover')
-						.css('background-position', 'center');
+            var $pic = $(this).children('.pic'),
+                $img = $pic.children('img');
 
-					$img
-						.css('visibility', 'hidden');
+            $pic
+                .css('background-image', 'url(' + $img.attr('src') + ')')
+                .css('background-size', 'cover')
+                .css('background-position', 'center');
 
-				});
+            $img
+                .css('visibility', 'hidden');
 
-		}
+        });
+
+    }
 
 })(jQuery);
